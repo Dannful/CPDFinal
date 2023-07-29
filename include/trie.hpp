@@ -8,20 +8,22 @@ using namespace std;
 #include "./hash_table.hpp"
 
 struct trie_node {
-    struct trie_node *equal;
-    vector<struct trie_node> smaller;
-    vector<struct trie_node> grater;
+    char c;
+    struct trie_node *left, *mid, *right;
     int identifier;
 };
 
 class Trie {
     private:
-    trie_node root;
+    trie_node *root;
+    trie_node *insert(trie_node *node, unsigned int identifier, string name, unsigned int char_position);
+    void search(trie_node *node, unsigned int current_char, string name, string buffer, HashTable *out);
 
     public:
     Trie() {
-        root.identifier = -1;
-        initialize(&root);
+        root = new trie_node;
+        initialize(root);
+        root->c = 0;
     }
 
     void initialize(trie_node *node);

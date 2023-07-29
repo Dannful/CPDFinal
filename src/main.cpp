@@ -1,6 +1,5 @@
 #include "./csv-parser/parser.hpp"
 #include "./hash_table.hpp"
-#include "./linked_list.hpp"
 #include "./trie.hpp"
 #include <iostream>
 #include <string>
@@ -29,7 +28,7 @@ int main(void) {
   HashTable table(100);
   trie.insert(13, "romano");
   trie.insert(20, "romeno");
-  trie.insert(50, "roma");
-  trie.search("romano", &table); // os resultados da busca (strings que iniciam com "romano") sao colocados na hash table referenciada
+  trie.insert(50, "rom");
+  trie.search("romeno", &table); // os resultados da busca (strings que iniciam com "romano") sao colocados na hash table referenciada
   cout << table.search(50).name << endl;
 }

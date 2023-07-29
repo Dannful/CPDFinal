@@ -16,7 +16,7 @@ void HashTable::insert(unsigned int identifier, string name) {
 
 SEARCH_RESULT HashTable::search(unsigned int identifier) {
   unsigned int index = hash_code(identifier) % BUCKETS;
-  SEARCH_RESULT search_result = {0, '\0'};
+  SEARCH_RESULT search_result = {0, ""};
 
   for(auto &element : table[index])
   {
