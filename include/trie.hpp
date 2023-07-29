@@ -1,18 +1,22 @@
 #ifndef TRIE_H
 #define TRIE_H
-#define ALPHABET_SIZE 26
+
 using namespace std;
+
 #include <string>
+#include <vector>
 #include "./hash_table.hpp"
 
-typedef struct trie_node {
-    struct trie_node *children[ALPHABET_SIZE];
+struct trie_node {
+    struct trie_node *equal;
+    vector<struct trie_node> smaller;
+    vector<struct trie_node> grater;
     int identifier;
-} TRIE_NODE;
+};
 
 class Trie {
     private:
-    TRIE_NODE root;
+    trie_node root;
 
     public:
     Trie() {
@@ -20,7 +24,7 @@ class Trie {
         initialize(&root);
     }
 
-    void initialize(TRIE_NODE *node);
+    void initialize(trie_node *node);
     void insert(unsigned int identifier, string name);
     void search(string name, HashTable *out);
 };
