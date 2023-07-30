@@ -26,9 +26,10 @@ int main(void) {
   /* exemplo bobo de como usar as estruturas de dados */
   Trie trie;
   HashTable table(100);
+  vector<int> vetor;
   trie.insert(13, "romano");
   trie.insert(20, "romeno");
   trie.insert(50, "rom");
-  trie.search("romeno", &table); // os resultados da busca (strings que iniciam com "romano") sao colocados na hash table referenciada
+  trie.search("romeno", vetor); // os resultados da busca (strings que iniciam com "romano") sao colocados na hash table referenciada
   cout << table.search(50).name << endl;
 }
