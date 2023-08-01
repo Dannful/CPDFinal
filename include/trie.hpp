@@ -1,5 +1,5 @@
-#ifndef TRIE_H
-#define TRIE_H
+#ifndef TRIE_HPP
+#define TRIE_HPP
 
 using namespace std;
 
@@ -16,8 +16,10 @@ struct trie_node {
 class Trie {
     private:
     trie_node *root;
+    
     trie_node *insert(trie_node *node, unsigned int identifier, string name, unsigned int char_position);
     void search(trie_node *node, unsigned int current_char, string name, string buffer,  vector<int> &players);
+    void display_trie(trie_node *root, char word[], int level);
 
     public:
     Trie() {
@@ -26,9 +28,10 @@ class Trie {
         root->caracter = 0;
     }
 
-    void initialize(trie_node *node);
+    trie_node get_root(Trie *trie);
+    void initialize(trie_node *node);   // essa função não deveria ser privada? dai só o construtor acessa ela
     void insert(unsigned int identifier, string name);
-    void search(string name,  vector<int> &players);
-    void display_trie(trie_node *root, char word[], int level);
+    void search(string name, vector<int> &players);
+    void display_trie();
 };
 #endif

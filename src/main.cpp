@@ -1,35 +1,45 @@
-#include "./csv-parser/parser.hpp"
-#include "./hash_table.hpp"
-#include "./trie.hpp"
 #include <iostream>
 #include <string>
+#include "read.hpp"
+#include "trie.hpp"
+#include "hash_table.hpp"
 
 using namespace aria::csv;
 using namespace std;
 
-void read_players(HashTable *table) {
-  ifstream f("arquivos-suporte/players.csv");
-  CsvParser parser(f);
-  bool first = false;
-  for (auto &row : parser) {
-    if (!first) {
-      first = true;
-      continue;
-    }
-    unsigned int identifier = stoi(row[0]);
-    string name = row[1];
-    table->insert(identifier, name);
-  }
-}
-
 int main(void) {
-  /* exemplo bobo de como usar as estruturas de dados */
-  Trie trie;
-  HashTable table(100);
+  HashTable ratings(100);
+  HashTable tags(100);
   vector<int> vetor;
-  trie.insert(13, "romano");
-  trie.insert(20, "romeno");
-  trie.insert(50, "rom");
-  trie.search("romeno", vetor); // os resultados da busca (strings que iniciam com "romano") sao colocados na hash table referenciada
-  cout << table.search(50).name << endl;
+  char *word;
+  Trie trie;
+
+  read_trt(&trie);
+  cout << "Feito a Trie!" << endl;
+
+  trie.search("Jan Oblak", vetor);
+
+  if(vetor.empty())
+    cout << "Não encontrado" << endl;
+  else
+    for(int player_id : vetor)
+      cout << player_id << endl;
+
+
+  //trie.display_trie();
+
+  //read_hash(&ratings);
+
+  /*
+    read_hash(&tags);  Aqui usar uma hash? o arquivo deixa livre para usar qualquer estrutura de dados
+    
+    Observem que os dados de entrada não possuem diretamente as informações de usuários
+    prontas para o retorno dessa pesquisa. Estas informações estão colocadas no arquivo
+    rating.csv. Deve-se implementar uma estrutura de dados (livre) para calcular e agregar em
+    pré-processamento as informações por usuário. Com essa estrutura construída, para responder
+    essa pesquisa basta consultar as entradas pelo identificador do usuário e retornar a lista de
+    jogadores que esse usuário revisou e suas informações adicionais.
+  */
+
+
 }

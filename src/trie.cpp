@@ -52,7 +52,6 @@ void Trie::search(trie_node *node, unsigned int current_char, string name,
   char caracter = name.at(current_char);
   
   if (node->identifier != -1) {
-    // players->insert(node->identifier, buffer + string(1, caracter));
     players.push_back(node->identifier);
   }
   if (node->caracter > caracter)
@@ -61,6 +60,12 @@ void Trie::search(trie_node *node, unsigned int current_char, string name,
     search(node->right, current_char, name, buffer, players);
   else if (current_char < name.length() - 1)
     search(node->mid, current_char + 1, name, buffer + string(1, caracter), players);
+}
+
+void Trie::display_trie()
+{
+  char *word;
+  display_trie(this->root, word, 0);
 }
 
 
@@ -76,10 +81,10 @@ void Trie::display_trie(trie_node *root, char word[], int level)
   }
   else
   {
+    word[level] = root->caracter;
     display_trie(root->left, word, level + 1);
     display_trie(root->mid, word, level + 1);
     display_trie(root->right, word, level + 1);
   }
-  
 
 }

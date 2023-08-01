@@ -1,5 +1,5 @@
-#ifndef HASHTABLE_H
-#define HASHTABLE_H
+#ifndef HASHTABLE_HPP
+#define HASHTABLE_HPP
 
 using namespace std;
 
@@ -24,8 +24,8 @@ struct SEARCH_RESULT {
 
 class HashTable {
 private:
-  int BUCKETS;
   list<Data> *table;
+  int BUCKETS;
 
 public:
   unsigned int used = 0;
