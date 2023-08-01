@@ -1,14 +1,13 @@
 #ifndef READ_HPP
 #define READ_HPP
 
-#include "./csv-parser/parser.hpp"
 #include "./hash_table.hpp"
 #include "./trie.hpp"
+#include "./csv-parser/parser.hpp"
 
 using namespace aria::csv;
-using namespace std;
 
-void read_hash(HashTable *hash);
-void read_trt(Trie *trie);
+void read_players(Trie *trie, PlayerTable *table);
+void read_users(PlayerTable *table);
 
 #endif

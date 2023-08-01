@@ -6,37 +6,28 @@ using namespace std;
 #include <list>
 #include <string>
 
-struct LIST_STATS {
-  unsigned int min;
-  unsigned int max;
-  float average;
-};
-
-struct Data {
+struct PlayerData {
   unsigned int identifier;
   string name;
+  string positions;
+  double rating;
+  unsigned int count;
 };
 
-struct SEARCH_RESULT {
-  unsigned int comparisons;
-  string name;
-};
-
-class HashTable {
+class PlayerTable {
 private:
-  list<Data> *table;
+  list<PlayerData> *table;
   int BUCKETS;
 
 public:
   unsigned int used = 0;
 
-  HashTable(unsigned int s) {
+  PlayerTable(unsigned int s) {
     this->BUCKETS = s;
-    table = new list<Data>[BUCKETS];
+    table = new list<PlayerData>[BUCKETS];
   }
 
-  LIST_STATS calculate_list_stats();
-  void insert(unsigned int identifier, string name);
-  SEARCH_RESULT search(unsigned int identifier);
+  void insert(PlayerData data);
+  PlayerData search(unsigned int identifier);
 };
 #endif
