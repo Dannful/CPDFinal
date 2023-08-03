@@ -37,7 +37,7 @@ void Trie::search(string name, vector<int> &players) {
   unsigned int char_position = 0;
   unsigned int length = name.length();
   trie_node *current_node = root;
-  while (root && char_position < length) {
+  while (current_node && char_position < length) {
     char current_character = name.at(char_position);
     if (current_node->character > current_character) {
       current_node = current_node->left;
@@ -48,7 +48,6 @@ void Trie::search(string name, vector<int> &players) {
       char_position++;
     }
   }
-  cout << current_node->character << endl;
   search(current_node, players);
 }
 

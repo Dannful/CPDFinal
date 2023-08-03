@@ -7,7 +7,7 @@
 
 using namespace aria::csv;
 
-void read_players(Trie *trie, PlayerTable *table);
-void read_users(PlayerTable *table);
+void read_players(Trie *trie, HashTable<PlayerData> *player_table);
+void read_ratings(HashTable<PlayerData> *player_table);
 
 #endif
