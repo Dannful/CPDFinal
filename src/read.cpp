@@ -3,9 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#define PLAYERS_FILE_PATH "arquivos-suporte/players.csv"
-#define RATING_FILE_PATH "arquivos-suporte/rating.csv"
-#define TAGS_FILE_PATH "arquivos-suporte/tags.csv"
 
 using namespace std;
 

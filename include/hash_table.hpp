@@ -32,8 +32,6 @@ public:
   }
 };
 
-enum BucketState { EMPTY, TOMBSTONE, FILLED };
-
 template <typename T> class HashTable {
 private:
   Bucket<T> **table = nullptr;
@@ -59,16 +57,16 @@ private:
 public:
   HashTable(unsigned int bucket_count) {
     this->buckets = bucket_count;
-    table = new Bucket<T> *[buckets];
+    table = new Bucket<T> *[buckets]();
   }
 
   HashTable(unsigned int bucket_count, unsigned int table_owner) {
     this->buckets = bucket_count;
-    table = new Bucket<T> *[buckets];
+    table = new Bucket<T> *[buckets]();
     this->table_owner = table_owner;
   }
 
-  unsigned int get_table_owner() { return table_owner; }
+  unsigned int get_table_owner() { return table_owner; } // muito util
 
   void insert(unsigned int identifier, T data) {
     unsigned int n = 0, index = 0, count = 0;
