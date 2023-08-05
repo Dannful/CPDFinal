@@ -1,4 +1,5 @@
 #include "./read.hpp"
+#include "binary_tree.hpp"
 #include "hash_table.hpp"
 #include <iostream>
 #include <string>
@@ -6,7 +7,7 @@
 
 using namespace std;
 
-void read_players(Trie *trie, HashTable<PlayerData> *player_table) {
+void read_players(Trie *trie, HashTable<PlayerData*> *player_table) {
   ifstream f(PLAYERS_FILE_PATH);
   CsvParser parser(f);
 
@@ -17,18 +18,19 @@ void read_players(Trie *trie, HashTable<PlayerData> *player_table) {
     string name = row[1];
     trie->insert(identifier, name);
 
-    PlayerData data;
-    data.name = name;
-    data.positions = row[2];
-    data.identifier = identifier;
-    data.rating = 0;
-    data.count = 0;
+    PlayerData *data = new PlayerData;
+    data->name = name;
+    data->positions = row[2];
+    data->identifier = identifier;
+    data->rating = 0;
+    data->count = 0;
     player_table->insert(identifier, data);
   }
   f.close();
 }
 
-void read_ratings(HashTable<PlayerData> *player_table) {
+void read_ratings(HashTable<PlayerData*> *player_table,
+                  HashTable<BinarySearchTree *> *users_table) {
   ifstream f(RATING_FILE_PATH);
   CsvParser parser(f);
 
@@ -38,10 +40,17 @@ void read_ratings(HashTable<PlayerData> *player_table) {
     unsigned int user_id = stoi(row[0]);
     unsigned int player_id = stoi(row[1]);
     float rating = stof(row[2]);
-    PlayerData *data =
-        player_table->search(player_id);
+    BinarySearchTree **user_tree = users_table->search(user_id);
+    if (!user_tree) {
+      BinarySearchTree *tree = new BinarySearchTree;
+      tree->insert(player_id, rating);
+      users_table->insert(user_id, tree);
+    } else {
+      (*user_tree)->insert(player_id, rating);
+    }
+    PlayerData **data = player_table->search(player_id);
     if (data)
-      data->rating = (data->rating * data->count + rating) / ++(data->count);
+      (*data)->rating = ((*data)->rating * (*data)->count + rating) / ++((*data)->count);
   }
   f.close();
 }

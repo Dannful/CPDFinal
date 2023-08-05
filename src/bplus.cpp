@@ -166,7 +166,8 @@ void BPTree::insertInternal(int x, Node *cursor, Node *child) {
       newRoot->size = 1;
       root = newRoot;
     } else {
-      insertInternal(cursor->key[cursor->size], findParent(root, cursor), newInternal);
+      insertInternal(cursor->key[cursor->size], findParent(root, cursor),
+                     newInternal);
     }
   }
 }
@@ -206,7 +207,4 @@ void BPTree::display(Node *cursor) {
 }
 
 // Get the root
-Node *BPTree::getRoot() {
-  return root;
-}
-
+Node *BPTree::getRoot() { return root; }
