@@ -1,32 +1,48 @@
+#ifndef BPLUS_HPP
+#define BPLUS_HPP
+
 #include <climits>
 #include <fstream>
 #include <iostream>
 #include <sstream>
+
+#define MAX 20
 using namespace std;
-//int MAX = 3;
+
+struct TagData
+{
+  unsigned int user_id;
+  unsigned int sofifa_id;
+  float rating;
+  string tag;
+};
+
 
 class Node {
   bool IS_LEAF;
-  int *key, size;
+  int size;
+  TagData *info;
   Node **ptr;
   friend class BPTree;
 
    public:
-  Node(int max);
+  Node();
 };
 
 // BP tree
 class BPTree {
   Node *root;
-  void insertInternal(int, Node *, Node *);
+  void insertInternal(TagData, Node *, Node *);
   Node *findParent(Node *, Node *);
 
    public:
-  int max;
 
-  BPTree(int max);
-  void search(int);
-  void insert(int);
+  BPTree( );
+  int search(int);     // pesquisa é feita por user.id
+  void insert(TagData);
   void display(Node *);
   Node *getRoot();
+  int update(TagData x);
 };
+
+#endif
