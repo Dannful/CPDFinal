@@ -14,7 +14,10 @@
 
 using namespace aria::csv;
 
-void read_players(Trie *trie, HashTable<PlayerData*> *player_table);
-void read_ratings(HashTable<PlayerData*> *player_table, HashTable<BinarySearchTree*> *users_table);
-void read_tags_ratings(BPTree *bplus);
+void read_players(Trie *trie, HashTable<PlayerData *> *player_table);
+
+void read_ratings(HashTable<PlayerData *> *player_table, HashTable<BinarySearchTree<PlayerWithRating*> *> *users_table);
+
+void read_tags(HashTable<PlayerData *> *player_table);
+
 #endif

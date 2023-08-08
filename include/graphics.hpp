@@ -3,7 +3,7 @@
 
 #include "hash_table.hpp"
 
-void print_player(PlayerData player, char *separator);
-void print_user_player(PlayerData player, float rating);
+void print_player(const PlayerData& player, char *separator);
+void print_user_player(const PlayerData& player, float rating);
 
 #endif
