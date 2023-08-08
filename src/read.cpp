@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void read_players(Trie *trie, HashTable<PlayerData *> *player_table) {
+void read_players(Trie *trie, HashTable<unsigned int, PlayerData *> *player_table) {
     ifstream f(PLAYERS_FILE_PATH);
     CsvParser parser(f);
 
@@ -23,16 +23,16 @@ void read_players(Trie *trie, HashTable<PlayerData *> *player_table) {
         data->identifier = identifier;
         data->rating = 0;
         data->count = 0;
-        data->tags = new BinarySearchTree<PlayerWithTag *>([](PlayerWithTag *a, PlayerWithTag *b) {
-            return strcmp(a->tag.c_str(), b->tag.c_str());
+        data->tags = new BinarySearchTree<string, short>([](const string &a, const string &b) {
+            return strcmp(a.c_str(), b.c_str());
         });
         player_table->insert(identifier, data);
     }
     f.close();
 }
 
-void read_ratings(HashTable<PlayerData *> *player_table,
-                  HashTable<BinarySearchTree<PlayerWithRating *> *> *users_table) {
+void read_ratings(HashTable<unsigned int, PlayerData *> *player_table,
+                  HashTable<unsigned int, BinarySearchTree<float, unsigned int> *> *users_table) {
     ifstream f(RATING_FILE_PATH);
     CsvParser parser(f);
 
@@ -42,18 +42,15 @@ void read_ratings(HashTable<PlayerData *> *player_table,
         unsigned int user_id = stoi(row[0]);
         unsigned int player_id = stoi(row[1]);
         float rating = stof(row[2]);
-        BinarySearchTree<PlayerWithRating *> **user_tree = users_table->search(user_id);
-        auto *playerWithRating = new PlayerWithRating;
-        playerWithRating->rating = rating;
-        playerWithRating->identifier = player_id;
+        BinarySearchTree<float, unsigned int> **user_tree = users_table->search(user_id);
         if (!user_tree) {
-            auto *tree = new BinarySearchTree<PlayerWithRating *>([](PlayerWithRating *a, PlayerWithRating *b) {
-                return a->rating - b->rating;
+            auto *tree = new BinarySearchTree<float, unsigned int>([](float a, float b) {
+                return a - b;
             });
-            tree->insert(playerWithRating);
+            tree->insert(rating, player_id);
             users_table->insert(user_id, tree);
         } else {
-            (*user_tree)->insert(playerWithRating);
+            (*user_tree)->insert(rating, player_id);
         }
         PlayerData **data = player_table->search(player_id);
         if (data)
@@ -62,7 +59,7 @@ void read_ratings(HashTable<PlayerData *> *player_table,
     f.close();
 }
 
-void read_tags(HashTable<PlayerData *> *player_table) {
+void read_tags(HashTable<unsigned int, PlayerData *> *player_table) {
     ifstream f(TAGS_FILE_PATH);
     CsvParser parser(f);
     for (auto &row: parser) {
@@ -70,11 +67,37 @@ void read_tags(HashTable<PlayerData *> *player_table) {
             continue;
         unsigned int player_id = stoi(row[1]);
         const string &tag = row[2];
-        BinarySearchTree<PlayerWithTag *> *tags = (*player_table->search(player_id))->tags;
-        auto *playerWithTag = new PlayerWithTag;
-        playerWithTag->identifier = player_id;
-        playerWithTag->tag = tag;
-        tags->insert(playerWithTag);
+        BinarySearchTree<string, short> *tags = (*player_table->search(player_id))->tags;
+        tags->insert(tag, 0xF);
     }
     f.close();
+}
+
+void insert_into_positions(HashTable<string, BinarySearchTree<double, unsigned int> *> *positions, const string &tag,
+                           unsigned int identifier, double rating) {
+    BinarySearchTree<double, unsigned int> **stored = positions->search(tag);
+    if (!stored) {
+        auto *bst = new BinarySearchTree<double, unsigned int>([](double a, double b) {
+            return a - b;
+        });
+        bst->insert(rating, identifier);
+        positions->insert(tag, bst);
+        return;
+    }
+    (*stored)->insert(rating, identifier);
+}
+
+void update_positions(HashTable<unsigned int, PlayerData *> *players,
+                      HashTable<string, BinarySearchTree<double, unsigned int> *> *positions) {
+    for (auto &identifier: players->keySet()) {
+        PlayerData player = **players->search(identifier);
+        if (player.count < MINIMUM_REVIEW_COUNT)
+            continue;
+        char *tag = player.positions.data();
+        char *next = strtok(tag, ", ");
+        while (next) {
+            insert_into_positions(positions, next, identifier, player.rating);
+            next = strtok(nullptr, ", ");
+        }
+    }
 }

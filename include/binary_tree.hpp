@@ -5,80 +5,72 @@
 
 using namespace std;
 
-struct PlayerWithTag {
-    unsigned int identifier;
-    string tag;
-};
-
-struct PlayerWithRating {
-    unsigned int identifier;
-    double rating;
-};
-
-template<typename T>
+template<typename K, typename V>
 class BinaryTreeNode {
 public:
-    BinaryTreeNode<T> *left, *right;
-    T value;
+    BinaryTreeNode<K, V> *left, *right;
+    K key;
+    V value;
 
-    BinaryTreeNode(T value) {
+    BinaryTreeNode(K key, V value) {
+        this->key = key;
         this->value = value;
         left = nullptr;
         right = nullptr;
     }
 };
 
-template<typename T>
+template<typename K, typename V>
 class BinarySearchTree {
 private:
-    function<double(T, T)> compare;
+    function<double(K, K)> compare;
 
-    BinaryTreeNode<T> *root = nullptr;
+    BinaryTreeNode<K, V> *root = nullptr;
 
-    BinaryTreeNode<T> *insert(BinaryTreeNode<T> *node, T value) {
+    BinaryTreeNode<K, V> *insert(BinaryTreeNode<K, V> *node, K key, V value) {
         if (!node)
-            return new BinaryTreeNode<T>(value);
-        if (compare(node->value, value) > 0)
-            node->left = insert(node->left, value);
+            return new BinaryTreeNode<K, V>(key, value);
+        if (compare(node->key, key) > 0)
+            node->left = insert(node->left, key, value);
         else
-            node->right = insert(node->right, value);
+            node->right = insert(node->right, key, value);
         return node;
     }
 
     void
-    inorder_traverse(unsigned int *count, unsigned int max, BinaryTreeNode<T> *node,
-                     const function<void(T)> &on_element) {
+    inorder_traverse(unsigned int *count, unsigned int max, BinaryTreeNode<K, V> *node,
+                     const function<void(K, V)> &on_element) {
         if (!node)
             return;
         inorder_traverse(count, max, node->right, on_element);
         if ((*count)++ >= max)
             return;
-        on_element(node->value);
+        on_element(node->key, node->value);
         inorder_traverse(count, max, node->left, on_element);
     }
 
 public:
 
-    explicit BinarySearchTree<T>(const function<double(T, T)> &compare) {
+    explicit BinarySearchTree<K, V>(const function<double(K, K)> &compare) {
         this->compare = compare;
     }
 
-    void insert(T value) {
-        root = insert(root, value);
+    void insert(K key, V value) {
+        root = insert(root, key, value);
     }
 
     void inorder_traverse(unsigned int count,
-                          const function<void(T)> &on_element) {
+                          const function<void(K, V)> &on_element) {
         unsigned int visited = 0;
         inorder_traverse(&visited, count, root, on_element);
     }
 
-    bool contains(T value) {
-        BinaryTreeNode<T> *node = root;
+    bool contains(K key) {
+        BinaryTreeNode<K, V> *node = root;
         while(node) {
-            if(compare(node->value, value) == 0)
+            if(compare(node->key, key) == 0)
                 return true;
-            if(compare(node->value, value) > 0)
+            if(compare(node->key, key) > 0)
                 node = node->left;
             else
                 node = node->right;

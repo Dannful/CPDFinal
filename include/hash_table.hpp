@@ -8,63 +8,52 @@ using namespace std;
 #include <string>
 #include "binary_tree.hpp"
 
-template<typename T>
+template<typename K, typename V>
 class Bucket {
 public:
-    unsigned int key;
-    T value;
+    K key;
+    V value;
 
-    Bucket(unsigned int key, T value) {
+    Bucket(K key, V value) {
         this->key = key;
         this->value = value;
     }
 };
 
-template<typename T>
+template<typename K, typename V>
 class HashTable {
 private:
-    Bucket<T> **table = nullptr;
+    Bucket<K, V> **table = nullptr;
     unsigned int buckets;
-    list<unsigned int> keys;
+    list<K> keys;
+    function<unsigned int(K)> hash_function;
 
-    unsigned int hash_code(unsigned int identifier) {
-        constexpr uint64_t BIT_NOISE1 = 0x9E3779B185EBCA87ULL;
-        constexpr uint64_t BIT_NOISE2 = 0xC2B2AE3D27D4EB4FULL;
-        constexpr uint64_t BIT_NOISE3 = 0x27D4EB2F165667C5ULL;
-        identifier *= BIT_NOISE1;
-        identifier ^= (identifier >> 8);
-        identifier += BIT_NOISE2;
-        identifier ^= (identifier << 8);
-        identifier *= BIT_NOISE3;
-        identifier ^= (identifier >> 8);
-        return identifier;
-    }
-
-    unsigned int probe(unsigned int identifier, unsigned short n) {
-        return (hash_code(identifier) + (n * n + n) / 2) % buckets;
+    unsigned int probe(K key, unsigned short n) const {
+        return (hash_function(key) + (n * n + n) / 2) % buckets;
     }
 
 public:
-    explicit HashTable(unsigned int bucket_count) {
+    explicit HashTable(unsigned int bucket_count, const function<unsigned int(K)>& hash_function) {
         this->buckets = bucket_count;
-        table = new Bucket<T> *[buckets]();
+        this->hash_function = hash_function;
+        table = new Bucket<K, V> *[buckets]();
     }
 
-    void insert(unsigned int identifier, T data) {
+    void insert(K key, V value) {
         unsigned int n = 0, index;
-        while (table[index = probe(identifier, n++)])
+        while (table[index = probe(key, n++)])
             if (n == buckets)
                 return;
-        keys.push_back(identifier);
+        keys.push_back(key);
 
-        auto *bucket = new Bucket<T>(identifier, data);
+        auto *bucket = new Bucket<K, V>(key, value);
         table[index] = bucket;
     }
 
-    T *search(unsigned int identifier) {
+    V *search (K key) const {
         unsigned int n = 0, index;
-        while (table[index = probe(identifier, n++)]) {
-            if (table[index]->key == identifier)
+        while (table[index = probe(key, n++)]) {
+            if (table[index]->key == key)
                 return &table[index]->value;
             if (n == buckets)
                 return nullptr;
@@ -72,14 +61,14 @@ public:
         return nullptr;
     }
 
-    list<unsigned int> &keySet() { return keys; }
+    [[nodiscard]] list<unsigned int> keySet() const { return keys; }
 };
 
 struct PlayerData {
     unsigned int identifier;
     string name;
     string positions;
-    BinarySearchTree<PlayerWithTag*> *tags;
+    BinarySearchTree<string, short> *tags;
     double rating;
     unsigned int count;
 };
