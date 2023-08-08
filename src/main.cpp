@@ -45,6 +45,7 @@ int main() {
             string excluding_top = query.substr(query.find("top") + 3);
             unsigned int count = stoi(excluding_top.substr(0, excluding_top.find(' ')));
             string tag = excluding_top.substr(excluding_top.find(' ') + 1);
+            tag = tag.substr(1, tag.length() - 2);
             BinarySearchTree<PlayerWithRating> tree([](PlayerWithRating a, PlayerWithRating b) {
                 return a.rating - b.rating;
             });
