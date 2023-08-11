@@ -5,7 +5,6 @@
 #include "./trie.hpp"
 #include "./csv-parser/parser.hpp"
 #include "./binary_tree.hpp"
-#include "./bplus.hpp"
 
 #define PLAYERS_FILE_PATH "arquivos-suporte/players.csv"
 #define RATING_FILE_PATH "arquivos-suporte/rating.csv"

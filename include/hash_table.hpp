@@ -8,6 +8,30 @@ using namespace std;
 #include <string>
 #include "binary_tree.hpp"
 
+unsigned int hash_int(unsigned int identifier) {
+    constexpr uint64_t BIT_NOISE1 = 0x9E3779B185EBCA87ULL;
+    constexpr uint64_t BIT_NOISE2 = 0xC2B2AE3D27D4EB4FULL;
+    constexpr uint64_t BIT_NOISE3 = 0x27D4EB2F165667C5ULL;
+    identifier *= BIT_NOISE1;
+    identifier ^= (identifier >> 8);
+    identifier += BIT_NOISE2;
+    identifier ^= (identifier << 8);
+    identifier *= BIT_NOISE3;
+    identifier ^= (identifier >> 8);
+    return identifier;
+}
+
+unsigned int hash_string(string s) {
+    unsigned int hash = 5381;
+    char character;
+    unsigned int character_position = 0;
+    unsigned int length = s.length();
+
+    while (character_position < length && (character = s.at(character_position++)))
+        hash = ((hash << 5) + hash) + character;
+    return hash;
+}
+
 template<typename K, typename V>
 class Bucket {
 public:
