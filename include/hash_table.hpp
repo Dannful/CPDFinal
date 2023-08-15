@@ -8,7 +8,7 @@ using namespace std;
 #include <string>
 #include "binary_tree.hpp"
 
-unsigned int hash_int(unsigned int identifier) {
+static unsigned int int_hash_function(unsigned int identifier) {
     constexpr uint64_t BIT_NOISE1 = 0x9E3779B185EBCA87ULL;
     constexpr uint64_t BIT_NOISE2 = 0xC2B2AE3D27D4EB4FULL;
     constexpr uint64_t BIT_NOISE3 = 0x27D4EB2F165667C5ULL;
@@ -21,7 +21,7 @@ unsigned int hash_int(unsigned int identifier) {
     return identifier;
 }
 
-unsigned int hash_string(string s) {
+static unsigned int string_hash_function(string s) {
     unsigned int hash = 5381;
     char character;
     unsigned int character_position = 0;

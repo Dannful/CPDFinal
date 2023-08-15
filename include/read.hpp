@@ -11,6 +11,7 @@
 #define TAGS_FILE_PATH "arquivos-suporte/tags.csv"
 #define MINIMUM_REVIEW_COUNT 1000
 
+using namespace std;
 using namespace aria::csv;
 
 void read_players(Trie *trie, HashTable<unsigned int, PlayerData *> *player_table);

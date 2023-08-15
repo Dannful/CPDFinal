@@ -3,21 +3,28 @@
 #include "./researches.hpp"
 #include <iostream>
 #include <string>
+#include <chrono>
 
 using namespace std;
 
 
 int main() {
-    HashTable<unsigned int, PlayerData *> players(PLAYERS_SIZE, &hash_int);
-    HashTable<unsigned int, BinarySearchTree<float, unsigned int> *> users(USERS_SIZE, &hash_int);
-    HashTable<string, BinarySearchTree<double, unsigned int> *> positions(TAG_BUCKET_COUNT, &hash_string);
+    HashTable<unsigned int, PlayerData *> players(PLAYERS_SIZE, &int_hash_function);
+    HashTable<unsigned int, BinarySearchTree<float, unsigned int> *> users(USERS_SIZE, &int_hash_function);
+    HashTable<string, BinarySearchTree<double, unsigned int> *> positions(TAG_BUCKET_COUNT, &string_hash_function);
     Trie player_names_trie;
     bool halt_condition = false;
 
+    auto start = std::chrono::high_resolution_clock::now();
     read_players(&player_names_trie, &players);
     read_ratings(&players, &users);
     update_positions(&players, &positions);
     read_tags(&players);
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+
+    cout << "Levou " << duration << " segundos para montar as estruturas." << endl;
 
     while (!halt_condition) {
         string query;

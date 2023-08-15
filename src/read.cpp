@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
 
 void read_players(Trie *trie, HashTable<unsigned int, PlayerData *> *player_table) {
     ifstream f(PLAYERS_FILE_PATH);
@@ -93,7 +92,9 @@ void update_positions(HashTable<unsigned int, PlayerData *> *players,
         PlayerData player = **players->search(identifier);
         if (player.count < MINIMUM_REVIEW_COUNT)
             continue;
-        char *tag = player.positions.data();
+        const char *static_tag = player.positions.data();
+        char tag[strlen(static_tag) + 1] = {};
+        strcpy(tag, static_tag);
         char *next = strtok(tag, ", ");
         while (next) {
             insert_into_positions(positions, next, identifier, player.rating);
