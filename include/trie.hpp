@@ -19,7 +19,6 @@ class Trie {
     
     trie_node *insert(trie_node *node, unsigned int identifier, string name, unsigned int char_position);
     void search(trie_node *node, vector<int> &players);
-    void display_trie(trie_node *root, char word[], int level);
     void initialize(trie_node *node);
 
     public:
@@ -29,9 +28,7 @@ class Trie {
         root->character = 0;
     }
 
-    trie_node get_root(Trie *trie);
     void insert(unsigned int identifier, string name);
     void search(string name, vector<int> &players);
-    void display_trie();
 };
 #endif

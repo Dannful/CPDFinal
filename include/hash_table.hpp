@@ -6,7 +6,6 @@ using namespace std;
 #include <bits/stdc++.h>
 #include <list>
 #include <string>
-#include "binary_tree.hpp"
 
 static unsigned int int_hash_function(unsigned int identifier) {
     constexpr uint64_t BIT_NOISE1 = 0x9E3779B185EBCA87ULL;
@@ -57,7 +56,7 @@ private:
     }
 
 public:
-    explicit HashTable(unsigned int bucket_count, const function<unsigned int(K)>& hash_function) {
+    HashTable(unsigned int bucket_count, const decltype(hash_function)& hash_function) {
         this->buckets = bucket_count;
         this->hash_function = hash_function;
         table = new Bucket<K, V> *[buckets]();
@@ -69,12 +68,11 @@ public:
             if (n == buckets)
                 return;
         keys.push_back(key);
-
         auto *bucket = new Bucket<K, V>(key, value);
         table[index] = bucket;
     }
 
-    V *search (K key) const {
+    V *search(K key) const {
         unsigned int n = 0, index;
         while (table[index = probe(key, n++)]) {
             if (table[index]->key == key)
@@ -85,16 +83,7 @@ public:
         return nullptr;
     }
 
-    [[nodiscard]] list<unsigned int> keySet() const { return keys; }
-};
-
-struct PlayerData {
-    unsigned int identifier;
-    string name;
-    string positions;
-    BinarySearchTree<string, short> *tags;
-    double rating;
-    unsigned int count;
+    [[nodiscard]] list<K> keySet() const { return keys; }
 };
 
 #endif
