@@ -76,21 +76,6 @@ void read_tags(HashTable<unsigned int, PlayerData *> *player_table) {
     f.close();
 }
 
-//void insert_into_positions(HashTable<string, set<ReviewedPlayer *, decltype(users_fun)> *> *positions, const string &tag,
-//                           unsigned int identifier, double rating) {
-//    auto stored = positions->search(tag);
-//    auto review = new ReviewedPlayer;
-//    review->rating = rating;
-//    review->identifier = identifier;
-//    if (!stored) {
-//        auto new_set = new set<ReviewedPlayer *, decltype(users_fun)>(users_fun);
-//        new_set->insert(review);
-//        positions->insert(tag, new_set);
-//        return;
-//    }
-//    (*stored)->insert(review);
-//}
-
 void
 insert_into_positions(HashTable<string, set<ReviewedPlayer *, decltype(users_fun)> *> *positions, string &tag,
                       unsigned int identifier, double rating) {
@@ -113,6 +98,8 @@ void update_positions(HashTable<unsigned int, PlayerData *> *players,
                       HashTable<string, set<ReviewedPlayer *, decltype(users_fun)> *> *positions) {
     for (auto &identifier: players->keySet()) {
         PlayerData player = **players->search(identifier);
+        if(player.count < MINIMUM_REVIEW_COUNT)
+            return;
         istringstream stream(player.positions);
         string tag;
         while (getline(stream, tag, ','))
